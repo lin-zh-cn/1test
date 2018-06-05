@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>克明峻德后台管理 - 登录</title>
+  
+    <link rel="shortcut icon" href="favicon.ico"> <link href="/static/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/static/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="/static/css/animate.min.css" rel="stylesheet">
+    <link href="/static/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            
+            <h3>欢迎使用 克明峻德后台管理系统</h3>
+
+            <form class="m-t" role="form" action="/login/" method="post">
+                <div class="form-group">
+                    <input type="email" name="user" class="form-control" placeholder="you@example.com" required="">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" placeholder="Your password" required="">
+                </div>
+                <div class="form-group">
+                    <table>
+                        <tr>
+                        <td width="45%"><input type="text" name="verifycode" class="form-control" placeholder="输入验证码" required=""></td>
+                        <td><img src="/login/verifyCode/" height="32px" alt="刷新验证码" align="right" style="cursor:pointer;" title="刷新验证码" onclick="javascript:this.src='/login/verifyCode/?rndcode='+Math.random();"></td>
+                        </tr>
+                    </table>
+
+
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Sign in</button>
+            </form>
+            <p class="alert alert-danger">{{ loginerr }}</p>
+
+        </div>
+    </div>
+    <script src="/static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/static/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="/static/js/login.js"></script>
+</body>
+
+
+</html>

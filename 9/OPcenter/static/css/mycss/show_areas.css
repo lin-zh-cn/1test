@@ -1,0 +1,232 @@
+/* 左侧边栏样式调整 */
+#side-menu>li:nth-of-type(2)>ul>li:nth-of-type(1)>a {
+  color: #fff;
+}
+
+/* 左侧选项按钮样式调整 */
+.ibox-title {
+  position: relative;
+}
+.btn-group {
+  position: absolute;
+}
+.dropdown-menu {
+  min-width: 65px;
+  top: 34px;
+}
+.dropdown-menu-domains {
+  top: 50px;
+}
+.dropdown-menu-domains>li {
+  width: 100px;
+}
+.dropdown-menu-domains>li>a:hover {
+  background-color: #ccc;
+}
+.dropdown-menu-domains>li>a {
+  padding: 0px 14px;
+  /* margin: 4px 0; */
+  border-radius: 0;
+  text-align: center;
+}
+.dropdown-menu>li>a {
+  padding: 3px 14px;
+  border-radius: 0;
+}
+
+
+/* 右侧输入框样式调整 */
+.form-group {
+  margin-bottom: 0px;
+  position: absolute;
+  right: 60px;
+  top: -9px;
+  width: 200px;
+}
+.form-group input {
+  border: 1px solid #1BB394;
+  border-radius: 10px;
+  height: 34px;
+}
+.pull-right {
+  position: relative;
+}
+.btn.confirm {
+  margin-bottom: 0px;
+  position: absolute;
+  top: -9px;
+  right: 0px;
+}
+ul li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.dropdown-menu>li {
+  position: relative;
+}
+.third-menu {
+  position: absolute;
+  width: 363px;
+  background-color: #F5F5F5;
+  top: 0px;
+  left: 100px;
+  padding-left: 0px;
+  border: 1px solid rgb(247, 244, 244);
+  box-shadow: #ccc 1px 1px 1px;
+}
+.third-menu>li {
+  float: left;
+  width: 120px;
+}
+.third-menu a {
+  display: block;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+}
+.third-menu a:hover {
+  background-color: #ccc;
+}
+
+#content-main>.ibox-title {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.select_btn1 {
+  position: absolute;
+  top: -27px;
+  left: -520px;
+}
+.select_btn1 .btn.btn-primary.dropdown-toggle {
+  width: 100px;
+}
+
+.select_btn2 {
+  position: absolute;
+  top: -27px;
+  left: -500px;
+}
+.ibox-title>.btns  {
+  position: absolute;
+  top: 5px;
+}
+/* 左上角按钮 */
+btn-success a {
+  color: inherit;
+}
+.btn-info a {
+  color: inherit;
+}
+.btn-warning a {
+  color: inherit;
+}
+.btn-danger a {
+  color: inherit;
+}
+
+/* 删除按钮模态框 */
+.delbtn {
+  width: 300px;
+  margin-top: 200px;
+}
+.delbtn .modal-title,
+.delbtn .modal-footer {
+  text-align: center;
+}
+.modal-footer {
+  position: relative;
+  height: 65px;
+}
+.delbtn .modal-footer button:nth-of-type(1) {
+  position: absolute;
+  left: 25%;
+}
+.delbtn .modal-footer button:nth-of-type(2) {
+  position: absolute;
+  left: 55%;
+}
+
+.tableArea {
+  padding: 10px 20px;
+}
+.tableArea th,
+.tableArea td {
+  text-align: center;
+}
+.input-group {
+  margin-top: 5px;
+}
+.input-group-addon {
+  width: 108px;
+  float: left;
+  margin: 0;
+  padding: 9px;
+}
+.input-group .form-control {
+  width: 400px;
+}
+#itemAdd {
+  background-color: #18a689;
+  margin-bottom: 0;
+  color: #fff
+}
+#itemAdd_edit {
+  background-color: #18a689;
+  margin-bottom: 0;
+  color: #fff;
+}
+.modalAdd ul>li>a{
+  text-align: center;
+}
+#itemInput,
+#itemInput_edit {
+  width: 108px;
+  float: left;
+}
+textarea {
+  width: 400px;
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+textarea:focus {
+  border: 1px solid #1BB394;
+}
+.alert-danger {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  z-index: 1;
+  width: 260px;
+  height: 70px;
+  margin: 0;
+  display: none;
+}
+.checkbox-area {
+  right: 30px;
+  top: 10px;
+}
+input[type="checkbox"] {
+  margin-left: 20px;
+}
+.caret-edit {
+  position: absolute;
+  top: 15px;
+  left: 85px;
+}
+#itemDetail_cate {
+  width: 108px
+}
+
+/* 设置不同区块hover效果 */
+.ibox.float-e-margins:hover,
+.tableArea:hover {
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+  transform: translate3d(0, -1px, 0) !important;
+}
+#content-main>.row>div:nth-of-type(1) {
+  padding-left: 30px;
+}
+#content-main>.row>div:nth-of-type(2) {
+  padding-right: 30px;
+}

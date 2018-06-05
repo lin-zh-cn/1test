@@ -1,0 +1,92 @@
+html {
+  min-width: 990px;
+}
+body.fixed-sidebar.mini-navbar .navbar-static-side {
+  width: 75px;
+}
+.dropdown.profile-element {
+  float: right;
+  margin-right: 60px;  
+  display: block;
+}
+.dropdown.profile-element>a {
+  float: right;
+  margin-top: 18px;
+}
+.dropdown-menu.animated.fadeInRight {
+  min-width: 100px;
+  top: 50px;
+}
+.nav-header {
+  background: #fff;
+  padding: 0 25px;
+  height: 50px;
+}
+.nav-header:hover {
+  cursor: pointer;
+}
+.navbar.navbar-static-top {
+  min-height: 50px;
+  border-bottom: 1px solid #ccc;
+  height: 50px;
+}
+.logo-element {
+  min-height: 108px;
+  line-height: 50px;
+  padding: 0;
+}
+.active>a>.fa.arrow:before {
+  content: "\f107";
+}
+/* 左侧导航栏每次刷新时隐藏 */
+.ulhide {
+  display: none;
+}
+
+.row.border-bottom {
+  height: 50px;
+}
+.navbar-minimalize.minimalize-styl-2.btn.btn-primary  {
+  margin-top: 10px;
+}
+#top-search {
+  height: 50px;
+}
+.img-circle {
+  height: 49px;
+}
+.dropdown-toggle {
+  float: right;
+  margin-top: 18px;
+}
+#content-main {
+  overflow-y: auto;
+  height: calc(100% - 50px);
+}
+.tableArea {
+  display: inline-block;
+  width: 100%;
+  padding-bottom: 36px!important;
+}
+/* 右下角copyright */
+#page-wrapper>.footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+}
+table,
+th {
+  text-align: center;
+}
+
+/* 设置所有按钮的hover阴影效果 */
+.ibox-title button:hover {
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+  transform: translate3d(0, -1px, 0) !important;
+}
+
+/* 设置所有表格hover阴影效果 */
+table {
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2) !important;
+}

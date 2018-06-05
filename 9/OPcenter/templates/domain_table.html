@@ -1,0 +1,190 @@
+{% extends 'master.html' %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/css/mycss/index.css">
+    <link rel="stylesheet" href="/static/css/mycss/show_quality.css">
+{% endblock %}
+
+{% block content %}
+        <!--右侧部分开始-->
+            <div class="row J_mainContent animated fadeInRight" id="content-main">
+                <!-- 头部工具栏 -->
+                <div class="ibox-title">
+                    <div class="pull-left">
+                        <div class="select_area">
+                            <div class="btn-group select_btn1">
+                                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle ">选择域名 <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-domains" id="domainsUl">
+                                    <li><a href="/webmoni/tables/">全部域名</a></li>
+                                  {% for row in data.project_all %}
+                                  <li><a href="/webmoni/tables/p/{{ row.id }}/" name="{{ row.name }}">{{ row.name }}</a></li>
+                                  {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>   
+                    <div class="pull-left btns">
+                        <div class="filterBtn">
+                          <button type="button" class="btn btn-outline btn-success" data-toggle="modal" data-target="#delModal"><a href="/webmoni/tables/fault/">故障域名</a></button>
+                          <span class="badge badge-danger pull-right">{{ data.fault_number }}</span>
+                        </div>
+                        <div class="filterBtn">
+                          <button type="button" class="btn btn-outline btn-warning" data-toggle="modal" data-target="#editModal"><a href="/webmoni/tables/notcheck/">不检测</a></button>
+                          <span class="badge badge-danger pull-right">{{ data.Not_check_number }}</span>
+                        </div>
+                        <div class="filterBtn">
+                          <button type="button" class="btn btn-outline btn-info" data-toggle="modal" data-target="#myModal"><a href="/webmoni/tables/lt_30/">证书即将过期</a></button>
+                          <span class="badge badge-danger pull-right">{{ data.lt_30 }}</span>
+                        </div>
+                    </div>  
+                    <div class="pull-right">
+
+                    <div class="form-group">
+                        <input type="search" placeholder="请输入您需要查找的域名 …" class="form-control" name="top-search" id="inputSearch" autofocus>
+                    </div>
+                    <button type="submit" class="btn btn-primary confirm" id="btn_confirm">确定</button>
+                    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                      <h4>温馨提示</h4>
+                      <p id="search_tip"></p>
+                    </div>
+
+                    </div>                           
+                </div>
+                <!-- 表格部分 -->
+                <div class="tableArea">
+                    <table class="table table-striped table-bordered col-xs-12">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>项目</th>
+                                <th>域名</th>
+                                <th>HTTP检测状态</th>
+                                <th>证书剩余天数</th>
+                                <th>证书到期时间</th>
+                                <th>是否检测</th>
+                                <th>是否告警</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in data.domainall %}
+                            <tr id="{{ forloop.counter }}" data-id="{{ row.id }}">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ row.project_name.name }}</td>
+                                <td><a href="/webmoni/areas-{{row.id}}/">{{ row.url }}</a></td>
+                                <td>{{ row.status.event_type }}</td>
+                                <td>{{ row.cert_valid_days }}</td>
+                                <td>{{ row.cert_valid_date }}</td>
+                                {% if row.check_id == 0  %}
+                                <td>是</td>
+                                {% else  %}
+                                <td>否</td>
+                                {% endif %}
+                                {% if row.warning == 0  %}
+                                <td>是</td>
+                                {% else %}
+                                <td>否</td>
+                                {% endif %}
+                                <td>
+                                  <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                      操作 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu animated fadeInUp" role="menu">
+                                      <li><a href="#" data-toggle="modal" data-target="#delDomain"><i class="fa fa-trash-o"></i>&nbsp;  删除</a></li>
+                                      <li><a href="#" data-toggle="modal" data-target="#editDomain"><i class="fa fa-edit"></i>  编辑</a></li>
+                                    </ul>
+                                  </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                  <nav aria-label="Page navigation">
+                      <ul class="pagination pull-right" id="pageUl">
+                      {% if data.domainall.has_previous %}
+                          <li id="nodeLi">
+                              <a href="/webmoni/tables/{{ data.domainall.previous_page_number }}/" aria-label="Previous" id="previous">
+                                  <span aria-hidden="true">&laquo;</span>
+                              </a>
+                          </li>
+                      {% endif %}
+                          {% for row in data.paginator.page_range %}
+                            <li><a href="/webmoni/tables/{{ row }}/" class="pageClick">{{ row }}</a></li>
+                          {% endfor %}
+                      {% if data.domainall.has_next %}
+                          <li>
+                              <a href="/webmoni/tables/{{ data.domainall.next_page_number }}" aria-label="Next" id="next">
+                                <span aria-hidden="true">&raquo;</span>
+                              </a>
+                          </li>
+                      {% endif %}
+                      </ul>
+                  </nav>
+                </div>
+            </div>
+            
+            <!-- 删除模态框 -->
+            <div class="modal fade" id="delDomain" tabindex="-1" role="dialog" aria-labelledby="delModalLabeldel" aria-hidden="true">
+              <div class="modal-dialog delbtn">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                          <h4 class="modal-title" id="delModalLabel">确认删除?</h4>
+                      </div>
+                      <div class="modal-footer">
+                          <input type="hidden" name="del_id" value="" id="delete">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                          <button type="submit" class="btn btn-primary" id="confirmDel" data-dismiss="modal">确认</button>
+                      </div>
+                  </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+          </div>
+          <!-- 编辑模态框 -->
+          <div class="modal fade" id="editDomain" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="btn_close_top_edit">
+                    &times;
+                  </button>
+                  <h4 class="modal-title" id="editModalLabel">
+                    修改区域
+                  </h4>
+                </div>
+                <div class="modal-body modalAdd">
+                  <div class="input-group">
+                    <input type="text" class="form-control domain_name" name="project" id="itemDetail_cate" aria-describedby="basic-addon1" disabled value="{{ graph_data.project}}">
+                    <input type="text" class="form-control domain_name" id="itemDetail_edit" aria-describedby="basic-addon1" disabled value="{{ graph_data.domain }}">
+                    <input type="hidden" name="domain" value="" id="edit">
+                    <div class="pull-right checkbox-area">
+                      <input type="checkbox" name="check_id" id="edit_notadd">不检测
+                      <input type="checkbox" name="warning" id="edit_notwarn">不警告
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal" id="btn_close_bottom_edit">关闭</button>
+                  <button type="submit" class="btn btn-primary" id="btn_save_edit">保存</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+          </div>
+          <!-- 动画模态框 -->
+          <div class="modal fade" id="waving" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="col-sm-12">
+              <div class="sk-spinner sk-spinner-wave">
+                  <div class="sk-rect1"></div>
+                  <div class="sk-rect2"></div>
+                  <div class="sk-rect3"></div>
+                  <div class="sk-rect4"></div>
+                  <div class="sk-rect5"></div>
+              </div>
+            </div>
+          </div>
+{% endblock %}
+
+{% block js %}
+    <script src="/static/js/show_quality.js"></script>
+{% endblock %}
