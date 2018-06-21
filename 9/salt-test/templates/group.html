@@ -1,0 +1,57 @@
+{% extends "index.html" %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="group-list">
+    <a class="btn btn-default" href="/edit_group/" role="button">新建组</a>
+        <table class="table">
+          <thead>
+            <tr>
+                <th>序号</th>
+                <th>组名</th>
+                <th>主机数</th>
+                <th>描述</th>
+                <th>编辑</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for group in all_group %}
+                <tr group_name="{{ group.group_name }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="/detail_group-{{ group.group_name }}/">{{ group.group_name }}</a></td>
+                    <td>{{ group.group_hosts_number }}</td>
+                    <td>{{ group.group_description }}</td>
+                    <td>
+                        <a class="group-action_edit" href="/edit_group-{{ group.group_name }}/" group_name="{{ group.group_name }}" >编辑</a>
+                        <a class="group-action_del"  group_name="{{ group.group_name }}" >删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+    $('.group-action_del').click(function(){
+        var group_name = $(this).attr('group_name')
+        console.log(group_name)
+        $.ajax({
+            url:'group.html',
+            type:'POST',
+            data:{del_group:group_name},
+            success:function(msg){
+                if (msg == 'OK'){
+                    $("tr[group_name='"+group_name+"']").remove()
+                }
+            }
+
+        })
+    })
+
+    </script>
+{% endblock %}

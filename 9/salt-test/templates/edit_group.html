@@ -1,0 +1,120 @@
+{% extends "index.html" %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/css/index.css">
+{% endblock %}
+
+{% block content %}
+    <div class="add_group-list">
+        <div class="add_group-info">
+            <span class="input-group add_group-name">
+              <span class="input-group-addon" id="basic-addon1">新组名</span>
+              <input type="text" class="form-control" placeholder="新建组的名字" aria-describedby="basic-addon1">
+            </span>
+            <span class="input-group add_group-description">
+              <span class="input-group-addon" id="basic-addon1">描述</span>
+              <input type="text" class="form-control" placeholder="组描述内容" aria-describedby="basic-addon1">
+            </span>
+            <button class="btn btn-default add_group-confirm" action="add_group" type="button">确定</button>
+        </div>
+        <span>
+            <button id="status" type="button" class="btn btn-primary hide" data-toggle="modal" data-target=".status"></button>
+            <div class="modal fade status" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content show_status">
+                    <p id="status_info"></p>
+                </div>
+              </div>
+            </div>
+        </span>
+        <div >
+            <button class="btn btn-default add_group-all_choice" type="button">全选</button>
+            <ul class="nav nav-tabs" role="tablist">
+                {% for sort_host in host_list.sort_host %}
+                <li role="presentation"><a href="#{{ sort_host }}" aria-controls="{{ sort_host }}" role="tab" data-toggle="tab">{{ sort_host }}</a></li>
+                {% endfor %}
+            </ul>
+              <!-- Tab panes -->
+            <div class="tab-content">
+                {% for sort_host,hosts in host_list.sort_host.items %}
+                <div role="tabpanel" class="tab-pane " id="{{ sort_host }}">
+                    <table class="table table-striped add_group-table">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>主机名</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for host in hosts %}
+                            <tr name="{{ host }}">
+                                <td><input type="checkbox" value="{{ host }}"/> {{ forloop.counter }}</td>
+                                <td>{{ host }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script language="JavaScript" src="/static/js/index.js"></script>
+    <script>
+    window.onload = function(){
+        var group_info = {{ group_info|safe }}
+        console.log(group_info)
+        if ( typeof group_info=== "object" ){
+            $(".add_group-confirm").attr('action','update_group')
+            $('.add_group-name').children('input').val(group_info['group_name'])
+            $('.add_group-description').children('input').val(group_info['group_description'])
+            for ( var host in group_info['group_hosts']){
+                $('.add_group-table').find("input[value='"+group_info['group_hosts'][host]+"']").attr("checked",true)
+            }
+        }else{
+            return null
+        }
+
+    };
+
+    $('.add_group-all_choice').click(function(){
+        $(".tab-content").children('.active').find(":checkbox").each(function () {
+            $(this).attr('checked',true)
+        })
+    })
+
+
+
+    $('.add_group-confirm').click(function(){
+        var action = $(this).attr('action')
+        var add_group_name = $('.add_group-name').children('input').val()
+        var add_group_description = $('.add_group-description').children('input').val()
+        var add_group_table = []
+        $('.add_group-table').find('input:checked').each(function(i){
+            add_group_table[i] = $(this).val()
+        })
+        $.ajax({
+            url:'edit_group.html',
+            type:'POST',
+            data:{
+                action:action,
+                group_name:add_group_name,
+                group_table:JSON.stringify(add_group_table),
+                group_description:add_group_description,
+            },
+            success:function(msg){
+                console.log(msg)
+                if ( msg == 'OK'){
+                    window.location.href = '/group/'
+                }else{
+                    show_status(msg)
+                }
+            }
+
+        })
+    })
+    </script>
+{% endblock %}

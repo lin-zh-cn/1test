@@ -1,0 +1,38 @@
+{% extends "index.html" %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="log-list">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>日期</th>
+                    <th>时间</th>
+                    <th>类型</th>
+                    <th>内容</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for i in log %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="/log-date-{{ i.date }}/">{{ i.date }}</a></td>
+                    <td>{{ i.time }}</td>
+                    <td><a href="/log-type-{{ i.type }}/">{{ i.type }}</a></td>
+                    <td>{{ i.log }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

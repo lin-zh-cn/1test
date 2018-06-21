@@ -1,0 +1,194 @@
+{% extends "index.html" %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block content %}
+
+{#    模块选择下拉框，和参数输入框#}
+    <div class="action-work">
+          <span class="action-select">
+              <select  id="module" class="btn btn-default">
+                <option value="">请选择模块</option>
+                <option value="service">服务管理</option>
+                <option value="cmd">Powershell</option>
+                <option value="cp">文件复制</option>
+              </select>
+          </span>
+
+          <span class="action-select">
+              <select id="hosts" class="btn btn-default"  name="hosts" >
+                    <option value="">请选择主机</option>
+                    <option value="*">所有主机</option>
+                    {% for group in all_group %}
+                    <option value="{{ group.group_name }}">{{ group.group_name }}</option>
+                    {% endfor %}
+              </select>
+          </span>
+
+          <div style="display: inline-block">
+              <select id="func"  class="btn btn-default" name="func">
+                  <option name="title" value="">请选择方法</option>
+                  <option name="service" value="restart">重启服务</option>
+                  <option name="service" value="start">启动服务</option>
+                  <option name="service" value="stop">停止服务</option>
+                  <option name="service" value="status">查看服务状态</option>
+                  <option name="cmd" value="run">powershell</option>
+                  <option name="cmd" value="script">脚本</option>
+                  <option name="cp" value="get_file">文件分发</option>
+              </select>
+          </div>
+
+          <span id="args">
+              <input name="service.restart" class="form-control action-arg_input hide" placeholder="请输入需要重启的服务名"/>
+              <input name="service.start" class="form-control action-arg_input hide" placeholder="请输入需要启动的服务名"/>
+              <input name="service.stop" class="form-control action-arg_input hide" placeholder="请输入需要停止的服务名"/>
+              <input name="service.status" class="form-control action-arg_input hide" placeholder="请输入查看状态的服务名"/>
+              <input name="cmd.run" class="form-control action-arg_input hide" placeholder="请输入powershell命令"/>
+              <input name="cmd.run" class="form-control action-arg_input hide" value="shell='powershell'" disabled/>
+              <input name="cmd.script" class="form-control action-arg_input hide" value="salt://"/>
+              <input name="cmd.script" class="form-control action-arg_input hide" value="shell='powershell'" disabled/>
+              <input name="cp.get_file" class="form-control action-arg_input hide" value="salt://"/>
+              <input name="cp.get_file" class="form-control action-arg_input hide" placeholder="请输入目标文件路径"/>
+          </span>
+
+          <div style="padding: 10px;display: inline-block">
+              <button id="exec" class="btn btn-default" type="button" value="执行">执行</button>
+          </div>
+          <span>
+            <button id="status" type="button" class="btn btn-primary hide" data-toggle="modal" data-target=".status"></button>
+            <div class="modal fade status" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content show_status">
+                    <p id="status_info"></p>
+                </div>
+              </div>
+            </div>
+          </span>
+    </div>
+
+{#展示执行后返回的数据table#}
+    <div class="action-frame">
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+                <th>序号</th>
+                <th>主机名</th>
+                <th>状态</th>
+            </tr>
+          </thead>
+          <tbody id="content" >
+          </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script language="JavaScript" src="/static/js/index.js"></script>
+    <script>
+//-----------------------------------------------------------------模块---------------------------------------------
+
+//展示执行结果模块
+    function show_exec_data(data){
+        var content = $('#content')
+        content.empty()
+        var i = 1
+        for ( var host in data ){
+            if (data[host] == true){
+                var rows = '<tr class="success"><td>'+i+'</td><td>'+host+'</td><td>' +data[host]+'</td></tr>'
+                content.append(rows)
+                i++
+            }else if (data[host] == false){
+                var rows = '<tr class="danger"><td>'+i+'</td><td>'+host+'</td><td>' +data[host]+'</td></tr>'
+                content.append(rows)
+                i++
+            }else{
+                var rows = '<tr class="success"><td>'+i+'</td><td>'+host+'</td><td>' +data[host]+'</td></tr>'
+                content.append(rows)
+                i++
+            }
+        }
+    }
+
+
+
+//模块选择，根据选择的模块显示模块的方法
+    $("#module").change(function(){
+        var module = $(this).val()
+        $("#func").children().each(function(){
+            if ($(this).attr('name') == module ){
+                console.log($(this).attr('name'));
+                $(this).removeClass('hide')
+            }else{
+                $(this).addClass('hide')
+            }
+        })
+    })
+
+
+    $('#func').change(function(){
+        func = $('#func').val()
+        module = $('#func').find('option:selected').attr('name')
+        mudule_func = module + '.' +func
+        $('#args').children().each(function(){
+            if ( $(this).attr('name') == mudule_func ){
+                $(this).removeClass('hide')
+            }else{
+                $(this).addClass('hide')
+            }
+        })
+    })
+
+
+//-------------------------------------------------------------------事件-------------------------------------------
+//执行按钮的点击事件，获取选择和输入的参数，post到action.html
+//通过view.action方法执行后返回数据，并处理数据，让其展示到表格
+//获取参数
+        $("#exec").click(function(){
+            show_status('请勿刷新页面')
+
+            var args = new Array()
+            var hosts = $("#hosts").val()
+            console.log(hosts)
+            var func = $('#func').val()
+            var module = $('#func').find('option:selected').attr('name')
+            var mudule_func = module + '.' +func
+            var args_list = $("input[name='"+mudule_func+"']")
+            args_list.each(function(i){
+                if ( !!$(this).val() ){
+                    args[args.length] = $(this).val()
+                }
+            })
+            if ( module == "" ){
+                show_status('请选择模块')
+                return false
+            }else if ( hosts == ""){
+                show_status('请选择主机')
+                return false
+            }else if ( func == "" ){
+                show_status('请选择方法')
+                return false
+            }
+
+            var params = JSON.stringify(args)
+//提交参数
+            console.log(params)
+            console.log(mudule_func)
+            $('#exec').attr("disabled",true)
+            $.ajax({
+                type:'post',
+                url:'/action/',
+                data:{hosts:hosts,
+                    module:mudule_func,
+                    args:params},
+//获取返回数据，并处理
+                success:function(data){
+                    show_exec_data(data)
+                    $('#exec').attr("disabled",false)
+                },
+                dataType:"json"
+            })
+        })
+    </script>
+{% endblock %}
